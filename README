@@ -1,0 +1,72 @@
+Version 1.1     Aug 23, 2011
+
+
+        Windows JavaScrip REPL Console With Debugger
+        
+        
+1. Introduction
+
+JSREPL is interactive command line environment for Microsoft Windows
+scripting engine (cscript.exe). Its purpose is to allow rapid development
+and debugging of JavaScript code on a command line.
+        
+2. Licensing
+
+This program is distributed under GPL 2. See COPYING.txt for details.
+
+3. Installation
+
+Copy js.cmd and all the *.js files to a directory in your PATH.
+
+4. Running JSREPL
+
+There are two modes of operation - interactive and script. To run JSREPL
+in interactive mode just lauhcn js.cmd without any parameters. It will
+print a quick help information upon startup and will enter REPL.
+
+Within REPL you can enter JavaScript expressions as well as JSREPL
+commands.
+
+To run JSREPL in script mode, pass a script name as the first parameter
+to js.cmd. It will load all the JSREPL code and then execute your script.
+Upon termination of the script, JSREPL will exit. If you rather remain in
+REPL after your script ends, set a global variable JSREPL_interactive to
+true in your scrpt.
+
+5. Debugging
+
+Debugging is done via simple debugger REPL, which can display the call
+stack and function source code. The debugger repl is entered via a
+breakpoint.
+
+There are two ways to insert breakpoints:
+    a) static breakpoints can be inserted in your script source code by
+       including dbg.js and then adding the following code at the point
+       where you would like to break:
+    
+        eval(dbgBreak("label"));
+        
+    b) dynamic breakpoints can be inserted/removed in your code from
+       within JSREPL console via bp and bd commands. You can only insert
+       breakpoints in global named functions or in anonymous functions
+       created in a global named function. Typically you would add break
+       point by loading your script via load command, then executing bp
+       command.
+       
+In either case, when the breakpoint is triggered, debug REPL will start.
+Iside debug REPL ? gives a list of commands. You can also evaluate any
+JavaScript expression. The expression will be evaluated in the call
+context of the code where the breakpoint is triggered.
+
+6. Bugs and Issues
+
+Please report all bugs and issues via github on
+
+http://github.com/rcrossrd/JSREPL/issues
+
+
+7. More Information
+
+For more information read the source code or take a look at github wiki
+(https://github.com/rcrossrd/JSREPL/wiki).
+
