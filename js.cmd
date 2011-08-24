@@ -40,6 +40,8 @@
 // terminate at that point)
 @set @withTry = true
 
+@set @JSREPL_Version = 1.1
+
 // Import specified file into current context
 function load(filePath) {
     var fso = new ActiveXObject("Scripting.FileSystemObject");
@@ -81,15 +83,19 @@ if (scriptArgs.length > 0) {
 if (JSREPL_interactive) {    // Running in interactive mode
     var cmdLine = "";
     WScript.Echo(
-        "\nSimple JavaScript REPL console\n\n",
-        "When no parameters are passed on command line console starts\n",
+        "\nInteractive JavaScript REPL console. Version ", @JSREPL_Version, "\n\n",
+        "When no parameters are passed on command line, JSREPL starts\n",
         "in interactive mode with the following commands available:\n",
         "   println(<expr>[, ...]) - prints expressions to stdout with \\n.\n",
         "   print(<expr>[,...])    - prints expressions to stdout without \\n.\n",
-        "   \\ at the end of line  - indicates continuation for multiline input.\n",
+        "   \\ at the end of line   - indicates continuation for multiline input.\n",
         "   load <file>            - loads and executes file in current session.\n",
         "   list <fn>              - list the source of the function. <fn> must\n",
         "                          - be function name without parentheses.\n",
+        "   bp <fn> <line>         - inserts a breakpoint in function <fn> before\n",
+        "                            line <line>. Lines are zero-based.\n",
+        "   bd <id>                - removes breakpoint with id <id>.\n",
+        "   bl                     - lists all breakpoints.\n",
         "   quit                   - terminates execution.\n\n",
         "When a file name is passed as a first parameter on a command line,\n",
         "it is executed in the context of this console and all arguments\n",
