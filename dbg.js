@@ -40,7 +40,10 @@ var DBG = {
     // Parse function text to find names of parameters, such
     // that those can be matched with values later
     parseFunction: function (fn) {
-        var fnText = fn.toString();
+        var fnText = fn;
+        if (typeof(fn) == "function") {
+            fnText = fn.toString();
+        }
         var res = "<Global>";
         // get rid of comments and newlines:
         fnText = fnText.replace(/\/\/.*(?=\r\n|\n\r|$)/g,"");
@@ -48,7 +51,7 @@ var DBG = {
         fnText = fnText.replace(/\r\n|\n\r/g, "");
         
         // find function name
-        var r = fnText.match(/^\s*function\s+(\w*)\s*\(/)
+        var r = fnText.match(/^\s*function(?:\s+(\w*)|)\s*\(/)
         if (r != null) {
             res = RegExp.$1 == "" ? "<anonymous>" : RegExp.$1.toString();
         }
@@ -257,6 +260,7 @@ var BreakPoints = {
         }
         var bpInfo = {
             savedFunc: fn.toString().split(/\n\r|\r\n/),
+            fn: fn,
             name: functionName,
             breaks: new Array()
         };
@@ -277,6 +281,7 @@ var BreakPoints = {
         
         var bpLine = parseInt(line);
         if (typeof(fn) == "function") {
+            var fnInfo = DBG.parseFunction(fn);
             var bpInfo = this.getFunctionBPs(functionName, fn);
             if (Arr(bpInfo.breaks).any(function(eBr) { return eBr.line == bpLine; })) {
                 println("ERROR: there is already a breakpoint at line ", bpLine,
@@ -284,6 +289,11 @@ var BreakPoints = {
                 return null;
             }
             var newFunctionText = this.updateFnBreaks(bpInfo, bpLine);
+            // was this anonymous function referenced via variable?
+            if (fnInfo.name == "<anonymous>") {
+                // make the assignment
+                newFunctionText = functionName + " = " + newFunctionText;
+            }
             if (newFunctionText != null) {
                 // a new breakpoint being added?
                 if (bpInfo.breaks.length == 0) {
@@ -313,15 +323,22 @@ var BreakPoints = {
         var bpInfo = this.bpIndex[bpId].parent;
         var iBp = Arr(bpInfo.breaks).findIdx(function(e) { return e.id == bpId; });
         bpInfo.breaks.splice(iBp, 1);
+        delete this.bpIndex[bpId];
+        // was this the last breakpoint in this function?
+        if (bpInfo.breaks.length == 0) {
+            delete  this.bpList[bpInfo.name];
+        }
         
         // generate function with the remainging breakpoints
         var newFunctionText = this.updateFnBreaks(bpInfo);
-        if (newFunctionText != null) {
-            delete this.bpIndex[bpId];
-            // was this the last breakpoint in this function?
-            if (bpInfo.breaks.length == 0) {
-                delete  this.bpList[bpInfo.name];
-            }
+        // newFunctionText should not be null, i.e. it is better to
+        // have null reference access here and fix the circumstances
+        // leading to it, than to defensively check for null.
+        var fnInfo = DBG.parseFunction(bpInfo.fn);
+        // was this anonymous function referenced via variable?
+        if (fnInfo.name == "<anonymous>") {
+            // make the assignment
+            newFunctionText = bpInfo.name + " = " + newFunctionText;
         }
         return newFunctionText;
     },
