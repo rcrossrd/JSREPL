@@ -40,7 +40,7 @@
 // terminate at that point)
 @set @withTry = true
 
-@set @JSREPL_Version = 1.1
+@set @JSREPL_Version = 1.2
 
 // Import specified file into current context
 function load(filePath) {
