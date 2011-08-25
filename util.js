@@ -28,17 +28,13 @@
 // Print the repr of all arguments
 function print() {
     for (var i = 0; i < arguments.length; i++) {
-        WScript.StdOut.Write(arguments[i].toString());
+        var v = arguments[i];
+        WScript.StdOut.Write(v == null ? "null" : v.toString());
     }
 }
 
-// This is exact copy of the previous one with extra newline,
-// It is ugly, but effective way to deal with variable number
-// of arguments
 function println() {
-    for (var i = 0; i < arguments.length; i++) {
-        WScript.StdOut.Write(arguments[i].toString());
-    }
+    print.apply(null, arguments);
     WScript.StdOut.WriteLine();
 }
 

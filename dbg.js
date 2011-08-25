@@ -134,8 +134,10 @@ var DBG = {
                                                 fnInfo.params[a] + "=" :
                                                 "";
                             var p = fnInfo.func.arguments[a];
-                            var paramValue = a < totalArgs ? p.toString() : "";
-                            if (typeof p == "string") {
+                            var paramValue = a < totalArgs ?
+                                (p == null ? "null" : p.toString()) :
+                                "";
+                            if (typeof(p) == "string") {
                                 paramValue = "\"" + paramValue + "\"";
                             }
                             print(a == 0 ? "" : ", ", paramName, paramValue);
@@ -214,7 +216,7 @@ var DBG = {
 function dbgBreak(msg) {
     return "DBG.repl(\"" + msg.toString() +
            "\" , function (v) { return eval(v); }, " +
-           "typeof arguments != \"undefined\" && arguments != null ? arguments.callee : null)";
+           "typeof(arguments) != \"undefined\" && arguments != null ? arguments.callee : null)";
 }
 
 // Dynamic breakpoint implementation - should only be called from JSREPL.

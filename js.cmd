@@ -91,7 +91,7 @@ if (JSREPL_interactive) {    // Running in interactive mode
         "   \\ at the end of line   - indicates continuation for multiline input.\n",
         "   load <file>            - loads and executes file in current session.\n",
         "   list <fn>              - list the source of the function. <fn> must\n",
-        "                          - be function name without parentheses.\n",
+        "                            be function name without parentheses.\n",
         "   bp <fn> <line>         - inserts a breakpoint in function <fn> before\n",
         "                            line <line>. Lines are zero-based.\n",
         "   bd <id>                - removes breakpoint with id <id>.\n",
